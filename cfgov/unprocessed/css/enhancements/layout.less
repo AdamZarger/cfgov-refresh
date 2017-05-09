@@ -310,6 +310,44 @@
     } );
 }
 
+.block {
+    .respond-to-min(@bp-med-min, {
+        &__bg-extend-right,
+        &__bg-extend-left {
+            position: relative;
+          
+          &:after {
+              content: '';
+              display: block;
+              width: 9999px;
+              height: 100%;
+              position: absolute;
+              top: 0;
+              background: @block__bg;   
+              z-index: 0;
+          }
+        }
+      
+        &__bg-extend-right {
+          &:after {
+              left: 100%;
+          }
+        }
+        
+        &__bg-extend-left {
+          &:after {
+              margin-left: 10px;
+              left: -9999px;
+          }
+        }
+    });
+}
+
+
+.content__hide-horizontal-overflow {
+  overflow-x: hidden;
+}
+
 /* topdoc
   name: EOF
   eof: true

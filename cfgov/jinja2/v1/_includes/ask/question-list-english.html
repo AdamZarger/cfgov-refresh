@@ -1,0 +1,38 @@
+{% import 'atoms/partially-styled-link.html' as partially_styled_link with context %}
+{% import 'molecules/pagination.html' as pagination with context %}
+
+
+{# ==========================================================================
+
+   Question summary list
+
+   ==========================================================================
+
+   Description: Builds question summary list.
+
+   questions:       List of questions
+
+
+   ========================================================================== #}
+
+{% macro render( questions ) -%}
+
+	<div class="questions-list">
+	    {% for question in questions %}
+	      	<article class="question_summary">
+				{{ partially_styled_link.render( {'plain_text': question.question, 'underlined_text': 'Read answer', 'url': slugurl( question.slug )} ) }}	
+			</article>
+	    {% endfor %}
+	</div>
+	
+    <div class="block block__sub">
+        {{ pagination.render( paginator.num_pages, current_page, '', index, 'Previous', 'Next' ) }}
+    </div>
+
+{%- endmacro %}
+
+
+
+
+
+

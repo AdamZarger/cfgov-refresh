@@ -4,6 +4,7 @@
 {% import 'atoms/partially-styled-link.html' as partially_styled_link with context %}
 {% import 'macros/category-icon.html' as category_icon %}
 {% import 'templates/render_block.html' as render_block with context %}
+{% import 'ask/search-bar.html' as search_bar with context %}
 
 
 {% block content_main_modifiers -%}
@@ -77,11 +78,13 @@
                         </div>
 
                         <div class="block block__sub">
-                            {{ tags.render( audiences, '/askcfpb/search/' ) }}
+                            {{ tags.render( audiences, '/askcfpb/' ) }}
                         </div>
                     </div>
+                    {{ search_bar.render( 'full' ) }}
+
                 </section>
-            
+
             </div>
         </div>
     </main>

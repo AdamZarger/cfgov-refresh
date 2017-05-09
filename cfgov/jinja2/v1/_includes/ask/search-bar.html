@@ -1,0 +1,58 @@
+{# ==========================================================================
+
+   ask_search.render()
+
+   ==========================================================================
+
+   Description:
+
+   Create an ask searchbar when given:
+
+   position:  The location of the bar on the page: 
+                    left: in a main section with a right sidebar
+                    right: in a main section with a left nav sidebar
+                    full: in a full-width page.
+
+   ========================================================================== #}
+
+{% macro render( position ) %}
+
+<aside class="search-bar
+              block 
+              block__bg 
+              block__flush-bottom 
+              {% if position == 'full' %}
+                search-bar__full
+              {% else %}
+                search-bar__with-sidebar
+                block__flush-sides 
+                block__bg-extend-{{position}}
+              {% endif %}" >
+  {% if position == 'full' %}
+  <div class="content_wrapper">
+  {% endif %}
+    <form method="get" action="/ask-cfpb/search-en" class="content-l">
+      <div class="search-bar_label content-l_col content-l_col-1-2">
+        <h4 class="u-mb0">
+          Don't see what you're looking for? <span class="break">Search for your question.</span>
+        </h4>
+      </div>
+      <div class="search-bar_input content-l_col content-l_col-1-2">
+        <div class="input-with-btn">
+        <input type="text" name="q" id="q">
+        <span class="input-with-btn_btn">
+          <button class="btn" name="btnSearch" id="btnSearch">
+            Search
+          </button>
+        </span>
+        </div>
+      </div>
+    </form>
+
+  {% if position == 'full' %}
+  </div><!-- .content_wrapper -->
+  {% endif %}
+
+</aside>
+
+{% endmacro %}

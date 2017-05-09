@@ -7,7 +7,7 @@
         {% for cat in categories %}
             <article class="ac-catnav ac-cat-{{ cat.slug_es }}">
                 <h2 class="ac-catnav-heading">
-                    <a href="">
+                    <a href="{{ 'categoria-' + cat.slug_es }}">
                         <img src="{{ static( 'nemo/_/img/icon-' + cat.slug + '-retina.png' ) }}" alt="" class="icon-40">
                         {{ cat.name_es }}
                     </a>

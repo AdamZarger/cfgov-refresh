@@ -3,7 +3,7 @@
    Ask CFPB pages at /ask-cfpb/.
    ========================================================================== */
 
-
+/* Answer page */
 .answer-module {
     border-top: 3px solid @green;
     border-bottom: 1px solid @block__border-bottom;
@@ -31,6 +31,9 @@
         margin-bottom: 0 !important;
     } 
 }
+
+
+/* Landing page */
 
 .ask-landing-page {
     .content_main {
@@ -64,5 +67,195 @@
                 }
             }
         }
+    }
+}
+
+/* Results pages */
+
+h1 .cf-icon {
+    color: @green;
+}
+
+.search-results {
+    max-width: 600px;    
+}
+
+.question_summary {
+    border-bottom: 1px solid @block__border-bottom;
+
+    &__full {
+        padding: unit((@grid_gutter-width / 2) / @base-font-size-px, em) 0;
+
+        .respond-to-min(@bp-med-min, {
+        padding:  unit(@grid_gutter-width / @base-font-size-px, em) 0 unit((@grid_gutter-width / 2) / @base-font-size-px, em) 0;
+        });
+
+        .question_title a {
+        font-size: @size-iv;
+        border-width: 0;
+        }
+    }
+
+    &__basic {
+        padding: unit((@grid_gutter-width / 2) / @base-font-size-px, em) 0 unit(@grid_gutter-width / @base-font-size-px, em) 0;
+    
+        .respond-to-min(@bp-med-min, {
+          font-size: @size-iv;
+          margin-bottom: 0;
+          padding:  unit(@grid_gutter-width / @base-font-size-px, em) 0;
+        });
+    }
+}
+
+
+
+
+.content_wrapper__full-height-left-sidebar {
+  position: relative;
+  
+  .respond-to-min(@bp-med-min, {
+    &:after {
+      content: '';
+      display: block;
+      margin-right: 8px;
+      border-right: 1px solid @content_sidebar-border;
+      position: absolute;
+      top: unit(@grid_gutter-width * 1.5 / @base-font-size-px, em);
+      right: 75%;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+    }
+  
+    .content_main:after {
+      display: none;
+    }
+  });
+}
+
+
+/* search bar */
+
+.search-bar {
+  position: relative;
+
+  &.block__bg {
+    background: @green-20; 
+    
+    &-extend-right,
+    &-extend-left {
+      &:after {
+        background-color: @green-20;
+      }
+    }
+  }
+  
+  .input-with-btn {
+    margin: 0;
+    display:table; 
+    width:100%;
+
+    @supports( display: flex ) {
+        display: flex;
+        width:  auto;
+    }
+
+    input {
+        display:table-cell;
+        width:100%;
+        float:left;
+
+        @supports( display: flex ) {
+            display: flex;
+            width: auto;
+            float: none;
+            flex: 1;
+        }
+    }
+
+    &_btn {
+        border-width: 0;
+        margin: 0;
+        display:table-cell; 
+        width:1%;
+        vertical-align:middle;
+
+        @supports( display: flex ) {
+            display: flex;
+            width: auto;
+        }
+
+        button {
+            border-top-left-radius:0;
+            border-bottom-left-radius:0;
+            height: 33px;
+        }
+     }
+
+  }
+  
+  &_label span {
+    display: block;
+  }
+  
+}
+
+.search-bar {
+    margin-top: 0;
+
+    &__full form.content-l {
+        .respond-to-min(@bp-lg-min, {
+            .grid_column(8);
+        });  
+    }
+
+    &__with-sidebar {    
+        .stacked-with-full-width-text {
+            .search-bar_label span {
+                display: inline;
+            }
+  
+            .content-l_col-1-2 {
+                width: 100%;
+            }
+
+            .content-l_col + .content-l_col {
+                margin-top: unit((@grid_gutter-width / 2) / @base-font-size-px, em);
+            }
+        }
+
+        .variable-width-cols {
+            form.content-l {
+                display: table;
+                width: 100%;
+            }
+            .search-bar_label,
+            .search-bar_input {
+                display: table-cell;
+            }
+            .search-bar_label {
+                white-space: nowrap;
+                width: auto;
+            }
+            .search-bar_input {
+                width: 100%;
+            }
+        }
+
+        .respond-to-range(@bp-xs-max, 700px, {
+            .stacked-with-full-width-text;
+        });
+
+        .respond-to-range(700px, @bp-sm-max, {
+            .variable-width-cols;
+        });
+        
+        .respond-to-range(@bp-med-min, @bp-med-max, {
+            .stacked-with-full-width-text;
+        });
+        
+        .respond-to-min(@bp-lg-min, {
+            .variable-width-cols;
+        });
     }
 }

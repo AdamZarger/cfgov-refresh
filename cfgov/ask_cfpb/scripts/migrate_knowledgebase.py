@@ -19,6 +19,7 @@ from ask_cfpb.models import (
     SubCategory)
 from ask_cfpb.models import Audience as ASK_audience
 from v1.util.migrations import get_or_create_page
+from django.utils.text import slugify
 
 logging.basicConfig(level=logging.WARNING)
 logging.disable(logging.INFO)
@@ -180,25 +181,56 @@ def get_or_create_search_results_pages():
 
 def get_or_create_category_pages():
     from v1.models import CFGOVPage
-    parent = CFGOVPage.objects.get(slug='ask-cfpb').specific
     counter = 0
     for cat in Category.objects.all():
-        cat_page = get_or_create_page(
+        for language in ['en', 'es']:
+            if language == 'en':
+                cat_name = cat.name
+                page_title = "category-{}".format(cat.slug)
+                parent = CFGOVPage.objects.get(slug='ask-cfpb').specific
+            else:
+                cat_name = cat.name_es
+                page_title = "categoria-{}".format(cat.slug_es)
+                parent = CFGOVPage.objects.get(slug='obtener-respuestas').specific
+
+            cat_page = get_or_create_page(
+                apps,
+                'ask_cfpb',
+                'AnswerCategoryPage',
+                cat_name,
+                page_title,
+                parent,
+                language=language,
+                ask_category=cat)
+            cat_page.has_unpublished_changes = True
+            revision = cat_page.save_revision()
+            cat_page.save()
+            revision.publish()
+            time.sleep(1)
+        counter += 1
+    print("Created {} category pages".format(counter))
+
+def get_or_create_audience_pages():
+    from v1.models import CFGOVPage
+    parent = CFGOVPage.objects.get(slug='ask-cfpb').specific
+    counter = 0
+    for audience in ASK_audience.objects.all():
+        audience_page = get_or_create_page(
             apps,
             'ask_cfpb',
-            'AnswerCategoryPage',
-            cat.name,
-            "category-{}".format(cat.slug),
+            'AnswerAudiencePage',
+            audience.name,
+            "audience-{}".format(slugify(audience.name)),
             parent,
             language='en',
-            ask_category=cat)
-        cat_page.has_unpublished_changes = True
-        revision = cat_page.save_revision()
-        cat_page.save()
+            ask_audience=audience)
+        audience_page.has_unpublished_changes = True
+        revision = audience_page.save_revision()
+        audience_page.save()
         revision.publish()
         time.sleep(1)
         counter += 1
-    print("Created {} category pages".format(counter))
+    print("Created {} audience pages".format(counter))
 
 
 def get_kb_statuses(ask_id):
@@ -478,6 +510,7 @@ def run():
     clean_up_blank_answers()
     get_or_create_parent_pages()
     get_or_create_category_pages()
+    get_or_create_audience_pages()
     get_or_create_search_results_pages()
     create_pages()
     logging.disable(logging.NOTSET)
