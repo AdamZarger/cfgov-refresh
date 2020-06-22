@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Branching and Merging - cfgov-refresh</title>
+  <title>Translation - cfgov-refresh</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,8 +18,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Branching and Merging";
-    var mkdocs_page_input_path = "branching-merging.md";
+    var mkdocs_page_name = "Translation";
+    var mkdocs_page_input_path = "translation.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -129,9 +129,24 @@
                     
     <a class="" href="../split-testing/">Split Testing</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../translation/">Translation</a>
+    <a class="current" href="./">Translation</a>
+    <ul class="subnav">
+            
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#overview">Overview</a></li>
+        
+            <li><a class="toctree-l4" href="#how-to-translate-text-in-cfgov-refresh">How to translate text in cfgov-refresh</a></li>
+        
+            <li><a class="toctree-l4" href="#wagtail-considerations">Wagtail Considerations</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
@@ -159,14 +174,9 @@
 		
     <span class="caption-text">Contributing</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Branching and Merging</a>
-    <ul class="subnav">
-            
-    
-
-    </ul>
+    <a class="" href="../branching-merging/">Branching and Merging</a>
                 </li>
                 <li class="">
                     
@@ -236,14 +246,14 @@
     
       
         
-          <li>Contributing &raquo;</li>
+          <li>Supporting Features &raquo;</li>
         
       
     
-    <li>Branching and Merging</li>
+    <li>Translation</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/branching-merging.md"
+        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/translation.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -253,13 +263,56 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="branching-and-merging">Branching and merging<a class="headerlink" href="#branching-and-merging" title="Permanent link">¶</a></h1>
-<p>Branches should be named descriptively, preferably in some way that indicates whether they are short-lived feature branches or longer-lived development branches. Short-lived feature branches should be deleted once they are merged into master. </p>
-<p>All pull requests to merge into master must be reviewed by at least one member of the cf.gov platform team. The cf.gov platform team will ensure that these reviews happen in a timely manner. To ensure timely code reviews, please tag all PRs to master with @cfpb/cfgov-backends and @cfpb/cfgov-frontends as appropriate.</p>
-<p>When reviewing pull requests, it is important to distinguish between explicit blockers and things that can be addressed in the future or would be nice to have. The latter two can be indicated with 'TODO'. This is best as a simple top-level post after review to summarize the review.</p>
-<p>The cfgov-refresh repository makes use of automated testing and linting to ensure the quality, consistency, and readability of the codebase. All pull requests to master must pass all automated tests and must not reduce the code coverage of the codebase. It is the responsibility of the submitter to ensure that the tests pass.</p>
-<p>Pull requests that are <em>not</em> to master must use GitHub labels in such a way that individuals who are responsible for reviewing those pull requests can easily find them. Pull requests that are works-in-progress must be clearly labeled as such.</p>
-<p>Generally, teams working on cf.gov projects should create and collaborate on feature branches, with frequent merges back to master. Teams are responsible for governing their own branches and forks, these guidelines apply to master. </p>
+                <h1 id="translation">Translation<a class="headerlink" href="#translation" title="Permanent link">¶</a></h1>
+<p>As cfgov-refresh is a Django project, the <a href="https://docs.djangoproject.com/en/1.11/topics/i18n/translation/">Django translation documentation is a good place to start</a>. What follows is a brief introduction to translations with the particular tools cfgov-refresh uses (like Jinja2 templates) and the conventions we use.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>Django translations use <a href="https://en.wikipedia.org/wiki/Gettext">GNU gettext</a> (see
+<a href="../installation/#install-gnu-gettext-for-django-translation-support">the installation instructions</a>).</p>
+<p>By convention, translations are usually performed in code by wrapping a string to be translated in a function that is either named or aliased with an underscore. For example:</p>
+<pre class="highlight"><code class="language-python">_(&quot;This is a translatable string.&quot;)</code></pre>
+
+<p>These strings are collected into portable object (<code>.po</code>) files for each supported language. These files map the original string (<code>msgid</code>) to a matching translated string (<code>msgstr</code>). For example:</p>
+<pre class="highlight"><code class="language-po">msgid &quot;This is a translatable string.&quot;
+msgstr &quot;Esta es una cadena traducible.&quot;</code></pre>
+
+<p>These portable object files are compiled into machine object files (<code>.mo</code>) that the translation system uses when looking up the original string.</p>
+<p>By convention the <code>.po</code> and <code>.mo</code> files live inside a <code>locale/[LANGUAGE]/LC_MESSAGES/</code> folder structure, for example, <code>cfgov/locale/es/LC_MESSAGES/django.po</code> for the Spanish language portable object file for all of our cfgov-refresh messages.</p>
+<h2 id="how-to-translate-text-in-cfgov-refresh">How to translate text in cfgov-refresh<a class="headerlink" href="#how-to-translate-text-in-cfgov-refresh" title="Permanent link">¶</a></h2>
+<p>This brief howto will guide you through adding translatable text to cfgov-refresh.</p>
+<h4 id="1-add-the-translation-function-around-the-string">1. Add the translation function around the string<a class="headerlink" href="#1-add-the-translation-function-around-the-string" title="Permanent link">¶</a></h4>
+<p>In Jinja2 templates:</p>
+<pre class="highlight"><code class="language-jinja">{{ _('Hello World!') }}</code></pre>
+
+<p>In Django templates:</p>
+<pre class="highlight"><code class="language-django">{% load i18n %}
+
+{% trans &quot;Hello World!&quot; %}</code></pre>
+
+<p>In Python code:</p>
+<pre class="highlight"><code class="language-python">from django.utils.translation import ugettext as _
+
+mystring = _('Hello World!')</code></pre>
+
+<p>The string in the call to the translation function will be the <code>msgid</code> in the portable object file below.</p>
+<h4 id="2-run-the-makemessages-management-command-to-add-the-string-to-the-portable-object-file">2. Run the <code>makemessages</code> management command to add the string to the portable object file<a class="headerlink" href="#2-run-the-makemessages-management-command-to-add-the-string-to-the-portable-object-file" title="Permanent link">¶</a></h4>
+<p>The <code>makemessages</code> management command will look through all Python, Django, and Jinja2 template files to find strings that are wrapped in a translation function call and add them to the portable object file for a particular language. The language is specified with <code>-l</code>. The command also must be called from the root of the Django app tree, <em>not</em> the project root.</p>
+<p>To generate or update the portable object file for Spanish:</p>
+<pre class="highlight"><code class="language-shell">cd cfgov
+django-admin.py makemessages -l es</code></pre>
+
+<h4 id="3-edit-the-portable-object-file-to-add-a-translation-for-the-string">3. Edit the portable object file to add a translation for the string<a class="headerlink" href="#3-edit-the-portable-object-file-to-add-a-translation-for-the-string" title="Permanent link">¶</a></h4>
+<p>The portable object files are stored in <code>cfgov/locale/[LANGUAGE]/LC_MESSAGES/</code>. For the Spanish portable object file, edit <code>cfgov/locale/es/LC_MESSAGES/django.po</code> and add the Spanish translation as the <code>msgstr</code> for your new <code>msgid</code></p>
+<pre class="highlight"><code class="language-po">msgid &quot;Hello World!&quot;
+msgstr &quot;Hola Mundo!&quot;</code></pre>
+
+<h4 id="4-run-the-compilemessages-management-command-to-compile-the-machine-object-file">4. Run the <code>compilemessages</code> management command to compile the machine object file<a class="headerlink" href="#4-run-the-compilemessages-management-command-to-compile-the-machine-object-file" title="Permanent link">¶</a></h4>
+<pre class="highlight"><code class="language-shell">cd cfgov
+django-admin.py compilemessages</code></pre>
+
+<h2 id="wagtail-considerations">Wagtail Considerations<a class="headerlink" href="#wagtail-considerations" title="Permanent link">¶</a></h2>
+<p>All of our Wagtail pages include a language-selection dropdown under its Configuration tab:</p>
+<p><img alt="Wagtail page language selection" src="../img/wagtail-language.png" /></p>
+<p>The selected language will force translation of all translatable strings in templates and code for that page.</p>
               
             </div>
           </div>
@@ -267,10 +320,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contributing-docs/" class="btn btn-neutral float-right" title="Contributing to the Docs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../browser-acceptance-tests/" class="btn btn-neutral float-right" title="Browser/Acceptance Testing">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../python-unit-tests/" class="btn btn-neutral" title="Python Unit Testing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../split-testing/" class="btn btn-neutral" title="Split Testing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -298,10 +351,10 @@
           <a href="https://github.com/cfpb/cfgov-refresh/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../python-unit-tests/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../split-testing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../contributing-docs/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../browser-acceptance-tests/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

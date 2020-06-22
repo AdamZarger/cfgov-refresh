@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Branching and Merging - cfgov-refresh</title>
+  <title>Debugging and Monitoring - cfgov-refresh</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,8 +18,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Branching and Merging";
-    var mkdocs_page_input_path = "branching-merging.md";
+    var mkdocs_page_name = "Debugging and Monitoring";
+    var mkdocs_page_input_path = "debugging-monitoring.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -71,9 +71,24 @@
                     
     <a class="" href="../running-docker/">Running in Docker</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../debugging-monitoring/">Debugging and Monitoring</a>
+    <a class="current" href="./">Debugging and Monitoring</a>
+    <ul class="subnav">
+            
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#using-django-debug-toolbar">Using Django Debug Toolbar</a></li>
+        
+            <li><a class="toctree-l4" href="#logging-database-queries-to-console">Logging database queries to console</a></li>
+        
+            <li><a class="toctree-l4" href="#monitoring-using-new-relic">Monitoring using New Relic</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -159,14 +174,9 @@
 		
     <span class="caption-text">Contributing</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Branching and Merging</a>
-    <ul class="subnav">
-            
-    
-
-    </ul>
+    <a class="" href="../branching-merging/">Branching and Merging</a>
                 </li>
                 <li class="">
                     
@@ -236,14 +246,14 @@
     
       
         
-          <li>Contributing &raquo;</li>
+          <li>Running this Project &raquo;</li>
         
       
     
-    <li>Branching and Merging</li>
+    <li>Debugging and Monitoring</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/branching-merging.md"
+        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/debugging-monitoring.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -253,13 +263,83 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="branching-and-merging">Branching and merging<a class="headerlink" href="#branching-and-merging" title="Permanent link">¶</a></h1>
-<p>Branches should be named descriptively, preferably in some way that indicates whether they are short-lived feature branches or longer-lived development branches. Short-lived feature branches should be deleted once they are merged into master. </p>
-<p>All pull requests to merge into master must be reviewed by at least one member of the cf.gov platform team. The cf.gov platform team will ensure that these reviews happen in a timely manner. To ensure timely code reviews, please tag all PRs to master with @cfpb/cfgov-backends and @cfpb/cfgov-frontends as appropriate.</p>
-<p>When reviewing pull requests, it is important to distinguish between explicit blockers and things that can be addressed in the future or would be nice to have. The latter two can be indicated with 'TODO'. This is best as a simple top-level post after review to summarize the review.</p>
-<p>The cfgov-refresh repository makes use of automated testing and linting to ensure the quality, consistency, and readability of the codebase. All pull requests to master must pass all automated tests and must not reduce the code coverage of the codebase. It is the responsibility of the submitter to ensure that the tests pass.</p>
-<p>Pull requests that are <em>not</em> to master must use GitHub labels in such a way that individuals who are responsible for reviewing those pull requests can easily find them. Pull requests that are works-in-progress must be clearly labeled as such.</p>
-<p>Generally, teams working on cf.gov projects should create and collaborate on feature branches, with frequent merges back to master. Teams are responsible for governing their own branches and forks, these guidelines apply to master. </p>
+                <h1 id="debugging-and-monitoring">Debugging and Monitoring<a class="headerlink" href="#debugging-and-monitoring" title="Permanent link">¶</a></h1>
+<h3 id="using-django-debug-toolbar">Using Django Debug Toolbar<a class="headerlink" href="#using-django-debug-toolbar" title="Permanent link">¶</a></h3>
+<p>When running locally it is possible to enable the
+<a href="https://django-debug-toolbar.readthedocs.io/en/stable/">Django Debug Toolbar</a>
+by defining the <code>ENABLE_DEBUG_TOOLBAR</code> environment variable:</p>
+<pre class="highlight"><code class="language-sh">$ ENABLE_DEBUG_TOOLBAR=1 ./runserver.sh</code></pre>
+
+<p>This tool exposes various useful pieces of information about things like HTTP headers,
+Django settings, SQL queries, and template variables. Note that running with the toolbar on
+may have an impact on local server performance.</p>
+<h3 id="logging-database-queries-to-console">Logging database queries to console<a class="headerlink" href="#logging-database-queries-to-console" title="Permanent link">¶</a></h3>
+<p>To log database queries to the console when running locally,
+define the <code>ENABLE_SQL_LOGGING</code> environment variable:</p>
+<pre class="highlight"><code class="language-sh">$ ENABLE_SQL_LOGGING=1 cfgov/manage.py shell
+&gt;&gt;&gt; from django.contrib.auth import get_user_model
+&gt;&gt;&gt; User = get_user_model()
+&gt;&gt;&gt; User.objects.count()
+(0.004) SELECT COUNT(*) AS &quot;__count&quot; FROM &quot;auth_user&quot;; args=()
+97</code></pre>
+
+<p>This will log any database queries (and time taken to execute them)
+to the console, and works with any Django code invoked from the shell,
+including the server and management commands:</p>
+<pre class="highlight"><code class="language-sh">$ ENABLE_SQL_LOGGING=1 ./runserver.sh
+$ ENABLE_SQL_LOGGING=1 cfgov/manage.py some_management_command</code></pre>
+
+<h3 id="monitoring-using-new-relic">Monitoring using New Relic<a class="headerlink" href="#monitoring-using-new-relic" title="Permanent link">¶</a></h3>
+<p>This project can be configured for real-time monitoring with
+<a href="https://newrelic.com/">New Relic</a>. This requires an active New Relic account
+and a valid license key.</p>
+<p>First, you'll need to install
+<a href="https://docs.newrelic.com/docs/agents/python-agent">the New Relic Python Agent</a>
+from
+<a href="https://pypi.org/project/newrelic/">from PyPI</a>.
+This package is not part of the standard development requirements but is
+included in
+the <a href="https://github.com/cfpb/cfgov-refresh/blob/master/requirements/deployment.txt"><code>requirements/deployment.txt</code></a> file.
+It can be installed into your Python environment using the following command:</p>
+<pre class="highlight"><code class="language-shell">$ pip install newrelic</code></pre>
+
+<p>New Relic monitoring is implemented by wrapping every request to the Django
+web server with a call to the Python agent. This agent records information
+about web requests and reports it back to New Relic's servers. Additionally,
+and depending on configuration, the agent also injects a bit of JavaScript
+into every page header allowing for monitoring of client-side performance
+in the web browser.</p>
+<p>The New Relic Python agent has many
+<a href="https://docs.newrelic.com/docs/agents/python-agent/configuration/python-agent-configuration">configuration settings</a>
+that control the information that gets recorded about web requests. This
+project includes a default
+<a href="https://github.com/cfpb/cfgov-refresh/blob/master/cfgov/newrelic.ini"><code>newrelic.ini</code></a>
+file that enables New Relic's
+<a href="https://docs.newrelic.com/docs/agents/manage-apm-agents/configuration/high-security-mode">high security mode</a>
+to limit the recording of potentially sensitive information.</p>
+<p>To activate New Relic monitoring of your instance of cf.gov, you'll need to set
+two environment variables:</p>
+<ul>
+<li><code>NEW_RELIC_LICENSE_KEY</code>: a valid New Relic license key</li>
+<li><code>NEW_RELIC_APP_NAME</code>: a unique identifier to describe your running application</li>
+</ul>
+<p>Make sure to choose a unique application name to help distinguish your web
+traffic from any other users who may be running against the same New Relic
+account.</p>
+<p>This project's
+<a href="https://github.com/cfpb/cfgov-refresh/blob/master/.env_SAMPLE"><code>.env_SAMPLE</code></a>
+file contains placeholder entries for these two variables.</p>
+<p>Once you've set these two variables, start or restart your local web server.</p>
+<p>When you make your first web request, you'll see messages in the console
+indicating that the New Relic Python agent has been activated. You should see
+a message indicating your select application name:</p>
+<pre class="highlight"><code class="language-txt">Successfully registered New Relic Python agent where app_name='cf.gov myname python'...</code></pre>
+
+<p>as well as a message indicating the use of high security mode:</p>
+<pre class="highlight"><code class="language-txt">High Security Mode is being applied to all communications between the agent and the data collector for this session.</code></pre>
+
+<p>You should now be able to navigate to the New Relic console and, after a few
+seconds, see your web server traffic in New Relic APM and New Relic Browser.</p>
               
             </div>
           </div>
@@ -267,10 +347,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contributing-docs/" class="btn btn-neutral float-right" title="Contributing to the Docs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../deployment/" class="btn btn-neutral float-right" title="Artifacts and Deployment">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../python-unit-tests/" class="btn btn-neutral" title="Python Unit Testing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../running-docker/" class="btn btn-neutral" title="Running in Docker"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -298,10 +378,10 @@
           <a href="https://github.com/cfpb/cfgov-refresh/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../python-unit-tests/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../running-docker/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../contributing-docs/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../deployment/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

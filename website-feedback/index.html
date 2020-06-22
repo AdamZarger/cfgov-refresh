@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Branching and Merging - cfgov-refresh</title>
+  <title>Website Feedback - cfgov-refresh</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,8 +18,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Branching and Merging";
-    var mkdocs_page_input_path = "branching-merging.md";
+    var mkdocs_page_name = "Website Feedback";
+    var mkdocs_page_input_path = "website-feedback.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -159,14 +159,9 @@
 		
     <span class="caption-text">Contributing</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Branching and Merging</a>
-    <ul class="subnav">
-            
-    
-
-    </ul>
+    <a class="" href="../branching-merging/">Branching and Merging</a>
                 </li>
                 <li class="">
                     
@@ -207,9 +202,24 @@
                     
     <a class="" href="../hmda/">HMDA Data</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../website-feedback/">Website Feedback</a>
+    <a class="current" href="./">Website Feedback</a>
+    <ul class="subnav">
+            
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#exporting-feedback-using-wagtail">Exporting feedback using Wagtail</a></li>
+        
+            <li><a class="toctree-l4" href="#exporting-feedback-from-the-command-line">Exporting feedback from the command line</a></li>
+        
+            <li><a class="toctree-l4" href="#querying-feedback-programmatically">Querying feedback programmatically</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
@@ -236,14 +246,14 @@
     
       
         
-          <li>Contributing &raquo;</li>
+          <li>APIs and Data &raquo;</li>
         
       
     
-    <li>Branching and Merging</li>
+    <li>Website Feedback</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/branching-merging.md"
+        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/website-feedback.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -253,13 +263,69 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="branching-and-merging">Branching and merging<a class="headerlink" href="#branching-and-merging" title="Permanent link">¶</a></h1>
-<p>Branches should be named descriptively, preferably in some way that indicates whether they are short-lived feature branches or longer-lived development branches. Short-lived feature branches should be deleted once they are merged into master. </p>
-<p>All pull requests to merge into master must be reviewed by at least one member of the cf.gov platform team. The cf.gov platform team will ensure that these reviews happen in a timely manner. To ensure timely code reviews, please tag all PRs to master with @cfpb/cfgov-backends and @cfpb/cfgov-frontends as appropriate.</p>
-<p>When reviewing pull requests, it is important to distinguish between explicit blockers and things that can be addressed in the future or would be nice to have. The latter two can be indicated with 'TODO'. This is best as a simple top-level post after review to summarize the review.</p>
-<p>The cfgov-refresh repository makes use of automated testing and linting to ensure the quality, consistency, and readability of the codebase. All pull requests to master must pass all automated tests and must not reduce the code coverage of the codebase. It is the responsibility of the submitter to ensure that the tests pass.</p>
-<p>Pull requests that are <em>not</em> to master must use GitHub labels in such a way that individuals who are responsible for reviewing those pull requests can easily find them. Pull requests that are works-in-progress must be clearly labeled as such.</p>
-<p>Generally, teams working on cf.gov projects should create and collaborate on feature branches, with frequent merges back to master. Teams are responsible for governing their own branches and forks, these guidelines apply to master. </p>
+                <h1 id="website-feedback">Website feedback<a class="headerlink" href="#website-feedback" title="Permanent link">¶</a></h1>
+<p>Website pages can be configured to display forms that solicit feedback from
+visitors, for example asking whether or not page information was useful and
+accurate.</p>
+<p>User-submitted feedback is stored in the Django database. There are several
+ways to access and export this data.</p>
+<h2 id="exporting-feedback-using-wagtail">Exporting feedback using Wagtail<a class="headerlink" href="#exporting-feedback-using-wagtail" title="Permanent link">¶</a></h2>
+<p>Users with appropriate permissions have access to an "Export feedback" tool
+in Wagtail. This tool generates a ZIP file containing submitted feedback
+between two user-specified dates.</p>
+<p><img alt="Screenshot of the Wagtail tool for exporting feedback" src="../img/export-feedback.png" /></p>
+<p>Feedback is automatically grouped into three segments, each stored as a CSV:</p>
+<ul>
+<li>Feedback submitted on Ask CFPB pages (both English and Spanish)</li>
+<li>Feedback submitted on Buying a House pages</li>
+<li>Feedback submitted on all other website pages</li>
+</ul>
+<p>In order to access this part of the Wagtail admin, users must be granted the
+"Can export feedback from the Wagtail admin" permission. This can be enabled
+or disabled for different Wagtail groups in the Groups area of the admin.</p>
+<h2 id="exporting-feedback-from-the-command-line">Exporting feedback from the command line<a class="headerlink" href="#exporting-feedback-from-the-command-line" title="Permanent link">¶</a></h2>
+<p>For more control over what feedback to export, the
+<a href="https://github.com/cfpb/cfgov-refresh/blob/master/cfgov/v1/management/commands/export_feedback.py"><code>export_feedback</code></a>
+Django management command can be used. This command generates a CSV file
+containing feedback for a specified set of pages and/or dates.</p>
+<p>To export all website feedback for all time, use this command:</p>
+<pre class="highlight"><code class="language-sh">cfgov/manage.py export_feedback --filename output.csv</code></pre>
+
+<p>(Alternatively, exclude the <code>--filename</code> parameter to send the output to the
+console.)</p>
+<p>To export feedback for a specific Wagtail page and its descendants, provide its
+slug. Specified pages must have slugs that are unique across the website.</p>
+<pre class="highlight"><code class="language-sh">cfgov/manage.py export_feedback ask-cfpb --filename ask_cfpb.csv</code></pre>
+
+<p>Specify multiple slugs to export feedback for multiple pages:</p>
+<pre class="highlight"><code class="language-sh">cfgov/manage.py export_feedback ask-cfpb owning-a-home --filename ask_and_bah.csv</code></pre>
+
+<p>To invert the selection, and export feedback for all pages <em>except</em> those
+specified, use the <code>--exclude</code> parameter:</p>
+<pre class="highlight"><code class="language-sh">cfgov/manage.py export_feedback --exclude ask-cfpb --filename everything_except_ask.csv</code></pre>
+
+<p>To limit the exported feedback within a given date range, provide the
+<code>--from-date</code> and/or the <code>--to-date</code> parameters. These parameters are
+inclusive, meaning that feedback submitted on or between the dates is included
+in the export.</p>
+<pre class="highlight"><code class="language-sh">cfgov/manage.py export_feedback --from-date 2019-01-01 --to-date 2019-12-31 --filename 2019.csv</code></pre>
+
+<h2 id="querying-feedback-programmatically">Querying feedback programmatically<a class="headerlink" href="#querying-feedback-programmatically" title="Permanent link">¶</a></h2>
+<p>For even greater control, feedback can be queried from a Python shell using the
+<a href="https://github.com/cfpb/cfgov-refresh/blob/master/cfgov/v1/models/feedback.py"><code>Feedback</code></a>
+Django model.</p>
+<p>This model includes a
+<a href="https://docs.djangoproject.com/en/1.11/topics/db/managers/#custom-managers">custom manager</a>
+that exposes a <code>for_pages</code> method that can be used to efficiently query
+feedback for one or more pages and all of their descendants:</p>
+<pre class="highlight"><code class="language-py">feedback = Feedback.objects.for_pages([page1, page2])</code></pre>
+
+<p>Like the management command, it can also be used to invert the selection:</p>
+<pre class="highlight"><code class="language-py">feedback = Feedback.objects.for_pages([page], exclude=True)</code></pre>
+
+<p>This method can also be combined in the usual way with other standard Django
+queryset methods:</p>
+<pre class="highlight"><code class="language-py">feedback = Feedback.objects.for_pages([page]).filter(language='es')</code></pre>
               
             </div>
           </div>
@@ -267,10 +333,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contributing-docs/" class="btn btn-neutral float-right" title="Contributing to the Docs">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../python-unit-tests/" class="btn btn-neutral" title="Python Unit Testing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../hmda/" class="btn btn-neutral" title="HMDA Data"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -298,10 +362,8 @@
           <a href="https://github.com/cfpb/cfgov-refresh/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../python-unit-tests/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../hmda/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../contributing-docs/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

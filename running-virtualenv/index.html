@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Development Tips - cfgov-refresh</title>
+  <title>Running in a Virtual Environment - cfgov-refresh</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,8 +18,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Development Tips";
-    var mkdocs_page_input_path = "development-tips.md";
+    var mkdocs_page_name = "Running in a Virtual Environment";
+    var mkdocs_page_input_path = "running-virtualenv.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -63,9 +63,26 @@
 		
     <span class="caption-text">Running this Project</span>
     <ul class="subnav">
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../running-virtualenv/">Running in a Virtual Environment</a>
+    <a class="current" href="./">Running in a Virtual Environment</a>
+    <ul class="subnav">
+            
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#1-git-operations">1. Git operations</a></li>
+        
+            <li><a class="toctree-l4" href="#2-run-elasticsearch-optional">2. Run Elasticsearch (optional)</a></li>
+        
+            <li><a class="toctree-l4" href="#3-launch-site">3. Launch Site</a></li>
+        
+            <li><a class="toctree-l4" href="#reinstalling-the-virtual-environment">Reinstalling the virtual environment</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -171,24 +188,9 @@
                     
     <a class="" href="../related-projects/">Related Projects</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Development Tips</a>
-    <ul class="subnav">
-            
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#main-front-end-templateasset-locations">Main front-end template/asset locations</a></li>
-        
-            <li><a class="toctree-l4" href="#installing-new-front-end-dependencies">Installing new front-end dependencies</a></li>
-        
-            <li><a class="toctree-l4" href="#developing-on-nested-satellite-apps">Developing on nested satellite apps</a></li>
-        
-        </ul>
-    
-
-    </ul>
+    <a class="" href="../development-tips/">Development Tips</a>
                 </li>
                 <li class="">
                     
@@ -246,14 +248,14 @@
     
       
         
-          <li>Contributing &raquo;</li>
+          <li>Running this Project &raquo;</li>
         
       
     
-    <li>Development Tips</li>
+    <li>Running in a Virtual Environment</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/development-tips.md"
+        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/running-virtualenv.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -263,71 +265,121 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="development-tips">Development tips<a class="headerlink" href="#development-tips" title="Permanent link">¶</a></h1>
-<h2 id="main-front-end-templateasset-locations">Main front-end template/asset locations<a class="headerlink" href="#main-front-end-templateasset-locations" title="Permanent link">¶</a></h2>
-<p><strong>Templates</strong> that are served by the Django server: <code>cfgov/jinja2/v1</code></p>
-<p><strong>Static assets</strong> prior to processing (combilation, minification, etc.):
-<code>cfgov/unprocessed</code>.</p>
+                <h1 id="running-in-a-virtual-environment">Running in a Virtual Environment<a class="headerlink" href="#running-in-a-virtual-environment" title="Permanent link">¶</a></h1>
+<p>First, follow
+<a href="../installation/#stand-alone-installation">the standalone installation instructions</a>
+to create your virtual environment, install required dependencies, and run
+the setup scripts.</p>
+<p>You will generally have three tabs (or windows) open in your terminal,
+which will be used for:</p>
+<ol>
+<li><strong>Git operations</strong>.
+    Perform Git operations and general development in the repository,
+    such as <code>git checkout master</code>.</li>
+<li><strong>Elasticsearch</strong>.
+    Run an Elasticsearch (ES) instance.
+    See instructions <a href="#2-run-elasticsearch-optional">below</a>.</li>
+<li><strong>Django server</strong>. Start and stop the web server.
+    Server is started with <code>./runserver.sh</code>,
+    but see more details <a href="#3-load-indexes--launch-site">below</a>.</li>
+</ol>
+<p>What follows are the specific steps for each of these tabs.</p>
+<h3 id="1-git-operations">1. Git operations<a class="headerlink" href="#1-git-operations" title="Permanent link">¶</a></h3>
+<p>From this tab you can do Git operations,
+such as checking out our master branch:</p>
+<pre class="highlight"><code class="language-bash">git checkout master</code></pre>
+
+<h4 id="updating-all-dependencies">Updating all dependencies<a class="headerlink" href="#updating-all-dependencies" title="Permanent link">¶</a></h4>
+<p>Each time you fetch from the upstream repository (this repo), run <code>./setup.sh</code>.
+This setup script will remove and reinstall the project dependencies
+and rebuild the site's JavaScript and CSS assets.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>After running <code>gulp build</code> the site's assets are copied over to <code>cfgov/static_built</code>,
-ready to be served by Django.</p>
+<p>You may also run <code>./backend.sh</code> or <code>./frontend.sh</code>
+if you only want to re-build the backend or front-end, respectively.</p>
 </div>
-<h2 id="installing-new-front-end-dependencies">Installing new front-end dependencies<a class="headerlink" href="#installing-new-front-end-dependencies" title="Permanent link">¶</a></h2>
-<ul>
-<li>Use <code>yarn add new_dep@se.m.ver</code> to install new dependencies
-  or update existing dependencies.</li>
-<li>If you can't do this for some reason or are looking to freshen all dependencies,
-  you will need to edit <code>.yarnrc</code>, temporarily commenting out the <code>--install.pure-lockfile true</code>
-  and <code>--install.offline true</code> flags before proceeding with your installation or update.</li>
-<li>In the rare but observed case that <code>yarn add new_dep@se.m.ver</code> doesn't add
-  every needed package to the offline cache, you likely need to first run
-  <code>yarn cache clean</code>.</li>
-</ul>
-<h2 id="developing-on-nested-satellite-apps">Developing on nested satellite apps<a class="headerlink" href="#developing-on-nested-satellite-apps" title="Permanent link">¶</a></h2>
-<p>Some projects can sit inside cfgov-refresh, but manage their own asset
-dependencies. These projects have their own <code>package.json</code> and base templates.</p>
-<p>The structure looks like this:</p>
-<h3 id="npm-modules">npm modules<a class="headerlink" href="#npm-modules" title="Permanent link">¶</a></h3>
-<ul>
-<li>List an app's own dependencies in
-  <code>cfgov/unprocessed/apps/[project namespace]/package.json</code>.</li>
-</ul>
-<h3 id="webpack">Webpack<a class="headerlink" href="#webpack" title="Permanent link">¶</a></h3>
-<ul>
-<li>Apps may include their own <code>webpack-config.js</code> configuration that adjusts how
-  their app-specific assets should be built. This configuration appears in
-  <code>cfgov/unprocessed/apps/[project namespace]/webpack-config.js</code>.</li>
-</ul>
-<h3 id="browserslist">Browserslist<a class="headerlink" href="#browserslist" title="Permanent link">¶</a></h3>
-<ul>
-<li>Apps may include a
-  <a href="https://github.com/browserslist/browserslist#config-file">browserslist config</a>
-  file, which is automatically picked up by <code>@babel/preset-env</code> inside the
-  webpack config, if no <code>browsers</code> option is supplied.</li>
-</ul>
-<h3 id="adding-images">Adding Images<a class="headerlink" href="#adding-images" title="Permanent link">¶</a></h3>
-<ul>
-<li>Images should be compressed and optimized before being committed to the repo</li>
-<li>In order to keep builds fast and reduce dependencies, the front-end build does not contain an image optimization step</li>
-<li>A suggested workflow for those with Adobe Creative Suite is as follows:</li>
-<li>Export a full-quality PNG from Adobe Illustrator</li>
-<li>Reexport that PNG from Adobe Fireworks as an 8-bit PNG</li>
-<li>Run the 8-bit PNG through <a href="https://imageoptim.com">ImageOptim</a></li>
-</ul>
-<h3 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">¶</a></h3>
-<ul>
-<li>Apps use a Jinja template that extends the <code>base.html</code>
-  template used by the rest of the site.
-  This template would reside in <code>cfgov/jinja2/v1/[project namespace]/index.html</code>
-  or similar (for example, <a href="https://github.com/cfpb/cfgov-refresh/blob/master/cfgov/jinja2/v1/owning-a-home/explore-rates/index.html">owning-a-home</a>).</li>
-</ul>
+<h5 id="setting-environments">Setting environments<a class="headerlink" href="#setting-environments" title="Permanent link">¶</a></h5>
+<p>The <code>NODE_ENV</code> environment variable can be set in your <code>.env</code> file to either
+<code>development</code> or <code>production</code>, which will affect how the build is made and what
+gulp tasks are available. To install dependencies of one environment
+or the other run <code>./frontend.sh</code> (dependencies and devDependencies)
+or <code>./frontend.sh production</code> (dependencies but not devDependencies).</p>
+<h3 id="2-run-elasticsearch-optional">2. Run Elasticsearch (optional)<a class="headerlink" href="#2-run-elasticsearch-optional" title="Permanent link">¶</a></h3>
+<p>Elasticsearch is needed for certain pieces of this project but is not a
+requirement for basic functionality.</p>
+<p>If Elasticsearch is installed via <a href="https://brew.sh">Homebrew</a>, you can see
+instructions for running manually or as a background service using:</p>
+<pre class="highlight"><code class="language-bash">brew info elasticsearch</code></pre>
+
+<p>Typically to run Elasticsearch as a background service you can run:</p>
+<pre class="highlight"><code class="language-bash">brew services start elasticsearch</code></pre>
+
+<h3 id="3-launch-site">3. Launch Site<a class="headerlink" href="#3-launch-site" title="Permanent link">¶</a></h3>
+<p>First, move into the <code>cfgov-refresh</code> project directory
+and ready your environment:</p>
+<pre class="highlight"><code class="language-bash"># Use the cfgov-refresh virtualenv.
+workon cfgov-refresh
+
+# cd into this directory (if you aren't already there)
+cd cfgov-refresh</code></pre>
+
+<p>From the project root, start the Django server:</p>
+<pre class="highlight"><code class="language-bash">./runserver.sh</code></pre>
+
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>A template may support a non-standard browser, like an older IE version,
-by including the required dependencies, polyfills, etc. in its
-template's <code>{% block css %}</code> or <code>{% block javascript scoped %}</code> blocks.</p>
+<p>If prompted to migrate database changes,
+stop the server with <code>ctrl</code> + <code>c</code> and run these commands:</p>
 </div>
+<pre class="highlight"><code class="language-bash">python cfgov/manage.py migrate
+./initial-data.sh
+./runserver.sh</code></pre>
+
+<p>To view the site browse to: <a href="http://localhost:8000">http://localhost:8000</a></p>
+<div class="admonition note">
+<p class="admonition-title">Using a different port</p>
+<p>If you want to run the server at a port other than 8000 use</p>
+<p><code>python cfgov/manage.py runserver &lt;port number&gt;</code></p>
+<p>Specify an alternate port number, e.g. <code>8001</code>.</p>
+</div>
+<p>To view the Wagtail admin login,
+browse to <a href="http://localhost:8000/admin">http://localhost:8000/admin</a> and login with username <code>admin</code>
+and password <code>admin</code> (created in <code>initial-data.sh</code> above; note that this
+password will expire after 60 days).</p>
+<div class="admonition note">
+<p class="admonition-title">Using HTTPS locally</p>
+<p>To access a local server using HTTPS use</p>
+<p><code>./runserver.sh ssl</code></p>
+<p>You'll need to ignore any browser certificate errors.</p>
+</div>
+<h4 id="available-gulp-tasks">Available Gulp Tasks<a class="headerlink" href="#available-gulp-tasks" title="Permanent link">¶</a></h4>
+<p>There are a number of important gulp tasks,
+particularly <code>build</code> and <code>test</code>,
+which will build the project and test it, respectively.
+Tasks are invoked via an <code>yarn run</code> command so that the local gulp-cli can be used.
+Using the <code>yarn run gulp -- --tasks</code> command you can view all available tasks.
+The important ones are listed below:</p>
+<pre class="highlight"><code>yarn run gulp build           # Concatenate, optimize, and copy source files to the production /dist/ directory.
+yarn run gulp clean           # Remove the contents of the production /dist/ directory.
+yarn run gulp lint            # Lint the scripts and build files.
+yarn run gulp docs            # Generate JSDocs from the scripts.
+yarn run gulp test            # Run linting, unit and acceptance tests (see below).
+yarn run gulp test:unit       # Run only unit tests on source code.
+yarn run gulp test:acceptance # Run only acceptance (in-browser) tests on production code.
+yarn run gulp audit           # Run code quality audits.</code></pre>
+
+<h3 id="reinstalling-the-virtual-environment">Reinstalling the virtual environment<a class="headerlink" href="#reinstalling-the-virtual-environment" title="Permanent link">¶</a></h3>
+<p>To remove an existing virtual environment for 
+<a href="../installation/#stand-alone-installation">a reinstall of cfgov-refresh</a>, 
+first deactivate the virtual environment if it is active:</p>
+<pre class="highlight"><code class="language-bash">deactivate</code></pre>
+
+<p>Then remove the existing virtual environment:</p>
+<pre class="highlight"><code class="language-bash">rmvirtualenv cfgov-refresh</code></pre>
+
+<p>After this, you may follow 
+<a href="installation/#stand-alone-installation">the installation instructions</a>
+again.</p>
               
             </div>
           </div>
@@ -335,10 +387,10 @@ template's <code>{% block css %}</code> or <code>{% block javascript scoped %}</
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../github-actions/" class="btn btn-neutral float-right" title="How We Use GitHub Actions">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../running-docker/" class="btn btn-neutral float-right" title="Running in Docker">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../related-projects/" class="btn btn-neutral" title="Related Projects"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../installation/" class="btn btn-neutral" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -366,10 +418,10 @@ template's <code>{% block css %}</code> or <code>{% block javascript scoped %}</
           <a href="https://github.com/cfpb/cfgov-refresh/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../related-projects/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../installation/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../github-actions/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../running-docker/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

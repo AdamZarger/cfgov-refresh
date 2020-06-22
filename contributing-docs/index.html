@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Branching and Merging - cfgov-refresh</title>
+  <title>Contributing to the Docs - cfgov-refresh</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,8 +18,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Branching and Merging";
-    var mkdocs_page_input_path = "branching-merging.md";
+    var mkdocs_page_name = "Contributing to the Docs";
+    var mkdocs_page_input_path = "contributing-docs.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -159,18 +159,28 @@
 		
     <span class="caption-text">Contributing</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../branching-merging/">Branching and Merging</a>
+                </li>
                 <li class=" current">
                     
-    <a class="current" href="./">Branching and Merging</a>
+    <a class="current" href="./">Contributing to the Docs</a>
     <ul class="subnav">
             
     
+        <ul>
+        
+            <li><a class="toctree-l4" href="#writing-the-docs">Writing the docs</a></li>
+        
+            <li><a class="toctree-l4" href="#running-the-docs-locally">Running the docs locally</a></li>
+        
+            <li><a class="toctree-l4" href="#deploying-the-docs-to-github-pages">Deploying the docs to GitHub Pages</a></li>
+        
+        </ul>
+    
 
     </ul>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../contributing-docs/">Contributing to the Docs</a>
                 </li>
                 <li class="">
                     
@@ -240,10 +250,10 @@
         
       
     
-    <li>Branching and Merging</li>
+    <li>Contributing to the Docs</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/branching-merging.md"
+        <a href="https://github.com/cfpb/cfgov-refresh/edit/master/docs/contributing-docs.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -253,13 +263,77 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="branching-and-merging">Branching and merging<a class="headerlink" href="#branching-and-merging" title="Permanent link">¶</a></h1>
-<p>Branches should be named descriptively, preferably in some way that indicates whether they are short-lived feature branches or longer-lived development branches. Short-lived feature branches should be deleted once they are merged into master. </p>
-<p>All pull requests to merge into master must be reviewed by at least one member of the cf.gov platform team. The cf.gov platform team will ensure that these reviews happen in a timely manner. To ensure timely code reviews, please tag all PRs to master with @cfpb/cfgov-backends and @cfpb/cfgov-frontends as appropriate.</p>
-<p>When reviewing pull requests, it is important to distinguish between explicit blockers and things that can be addressed in the future or would be nice to have. The latter two can be indicated with 'TODO'. This is best as a simple top-level post after review to summarize the review.</p>
-<p>The cfgov-refresh repository makes use of automated testing and linting to ensure the quality, consistency, and readability of the codebase. All pull requests to master must pass all automated tests and must not reduce the code coverage of the codebase. It is the responsibility of the submitter to ensure that the tests pass.</p>
-<p>Pull requests that are <em>not</em> to master must use GitHub labels in such a way that individuals who are responsible for reviewing those pull requests can easily find them. Pull requests that are works-in-progress must be clearly labeled as such.</p>
-<p>Generally, teams working on cf.gov projects should create and collaborate on feature branches, with frequent merges back to master. Teams are responsible for governing their own branches and forks, these guidelines apply to master. </p>
+                <h1 id="contributing-to-the-docs">Contributing to the Docs<a class="headerlink" href="#contributing-to-the-docs" title="Permanent link">¶</a></h1>
+<p>Our documentation is written as Markdown files and served via GitHub Pages
+by <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+<h2 id="writing-the-docs">Writing the docs<a class="headerlink" href="#writing-the-docs" title="Permanent link">¶</a></h2>
+<p>As our documentation is written in Markdown,
+the <a href="https://daringfireball.net/projects/markdown/">base Markdown specification</a>
+is a useful reference. MkDocs also includes
+<a href="https://www.mkdocs.org/user-guide/writing-your-docs/#writing-with-markdown">some documentation to get you started writing in Markdown</a>.</p>
+<p>In addition to standard Markdown, our documentation supports the following extensions:</p>
+<ul>
+<li>
+<p><a href="https://python-markdown.github.io/extensions/admonition/">Admonitions</a>
+    adds specially called-out text anywhere within the document
+    as notes, warnings, and other types.</p>
+</li>
+<li>
+<p><a href="https://facelessuser.github.io/pymdown-extensions/extensions/betterem/">BetterEm</a>
+    improves the handling of bold and italics.</p>
+</li>
+<li>
+<p><a href="https://facelessuser.github.io/pymdown-extensions/extensions/magiclink/">MagicLink</a>
+    provides automatic linking for URLs in the Markdown text.</p>
+</li>
+<li>
+<p><a href="https://facelessuser.github.io/pymdown-extensions/extensions/superfences/">SuperFences</a>
+    makes a number of improvements to standard Markdown code fences.</p>
+</li>
+<li>
+<p><a href="https://facelessuser.github.io/pymdown-extensions/extensions/tilde/">Tilde</a>
+    adds support for creating <code>&lt;del&gt;&lt;/del&gt;</code> tags with <code>~~</code>.</p>
+</li>
+<li>
+<p><a href="https://python-markdown.github.io/extensions/tables/">Tables</a>
+    adds support for tables to standard Markdown.</p>
+</li>
+</ul>
+<p>When creating new documents, they should be added to the
+<a href="https://github.com/cfpb/cfgov-refresh/blob/master/mkdocs.yml">mkdocs.yml file</a>
+in the appropriate place under <code>nav:</code> to get them to appear in the sidebar navigation.
+For example:</p>
+<pre class="highlight"><code>nav:
+- Introduction: index.md</code></pre>
+
+<h2 id="running-the-docs-locally">Running the docs locally<a class="headerlink" href="#running-the-docs-locally" title="Permanent link">¶</a></h2>
+<h3 id="with-docker">With Docker<a class="headerlink" href="#with-docker" title="Permanent link">¶</a></h3>
+<p>When running cfgov-refresh using <a href="../installation/#docker-based-installation">Docker-compose</a>,
+this documentation is running by default at <a href="http://localhost:8888">http://localhost:8888</a>.</p>
+<h3 id="manually">Manually<a class="headerlink" href="#manually" title="Permanent link">¶</a></h3>
+<p>When using
+<a href="../installation/#stand-alone-installation">the stand-alone installation</a>
+of cfgov-refresh,
+you can run these docs with:</p>
+<pre class="highlight"><code class="language-bash">workon cfgov-refresh
+pip install -r requirements/docs.txt
+mkdocs serve -a :8888</code></pre>
+
+<p>Once running, they are accessible at <a href="http://localhost:8888">http://localhost:8888</a>.</p>
+<h2 id="deploying-the-docs-to-github-pages">Deploying the docs to GitHub Pages<a class="headerlink" href="#deploying-the-docs-to-github-pages" title="Permanent link">¶</a></h2>
+<p>Every time a PR is merged to master,
+GitHub Actions will build and deploy the documentation to
+<a href="https://cfpb.github.io/cfgov-refresh/">https://cfpb.github.io/cfgov-refresh/</a>.
+See <a href="../github-actions/">How we use GitHub Actions</a> for more info.</p>
+<p>If you would like to deploy to a fork of cfgov-refresh owned by another user
+you can provide the <code>-r</code> argument:</p>
+<pre class="highlight"><code class="language-bash">mkdocs gh-deploy -r USER</code></pre>
+
+<p>Where <code>USER</code> is the GitHub user.
+The docs will then be available at <a href="https://USER.github.io/cfgov-refresh/">https://USER.github.io/cfgov-refresh/</a> after a short period of time.</p>
+<p>See the
+<a href="https://www.mkdocs.org/user-guide/deploying-your-docs/">the MkDocs documentation</a>
+for more information.</p>
               
             </div>
           </div>
@@ -267,10 +341,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contributing-docs/" class="btn btn-neutral float-right" title="Contributing to the Docs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../related-projects/" class="btn btn-neutral float-right" title="Related Projects">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../python-unit-tests/" class="btn btn-neutral" title="Python Unit Testing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../branching-merging/" class="btn btn-neutral" title="Branching and Merging"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -298,10 +372,10 @@
           <a href="https://github.com/cfpb/cfgov-refresh/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../python-unit-tests/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../branching-merging/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../contributing-docs/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../related-projects/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
